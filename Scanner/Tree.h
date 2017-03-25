@@ -1,9 +1,6 @@
 #pragma once
 #include "defs.h"
 #include "Scanner.h"
-#include <stack>
-#include <string>
-#include <iostream>
 
 using namespace std;
 
@@ -16,9 +13,9 @@ enum DATA_TYPE {
 };
 
 struct Node {
-	TypeLex name;				// идентификатор переменной
-	DATA_TYPE type;				// тип значения
-	DATA_TYPE ReturnType;		// тип возвращаемого значения
+	TypeLex name;
+	DATA_TYPE type;
+	DATA_TYPE ReturnType;
 
 	Node *parent;
 	Node *left;
@@ -45,9 +42,7 @@ struct Node {
 		strcpy(name, l);
 		type = t;
 	}
-
 };
-
 
 class Tree {
 private:
@@ -58,24 +53,25 @@ public:
 	Tree();
 	~Tree();
 
-	static TScaner* sc; //?
-	bool CheckVar(TypeLex a);
-	Node* AddId(TypeLex a, DATA_TYPE t);
-
-	void PaintError(TypeLex a, string str);
-
-	DATA_TYPE TypeAnalis(int a);
-	DATA_TYPE ConvertTypes(DATA_TYPE t1, DATA_TYPE t2);
-	Node* FindId(TypeLex a);
-	void GetPosition();
-	void SetPosition();
-	void CheckMain();
+	static TScaner* sc;
+	
+	void GetPosition();	//Сохраняет начало блока, создает правый потомок, перемещает cur в него
+	void SetPosition();	//Загружает начало блока в cur
+	void CheckMain();	//Вызывается при main
 	void ShowTree();
-
-	// СЕМАНТИЧЕСКИЕ ПОДПРОГРАММЫ
-	// установить текущий узел дерева
+	void PaintError(TypeLex a, string str);
 	void SetSc(TScaner *a) { sc = a; };
-	DATA_TYPE CheckDataTypes(DATA_TYPE type1, DATA_TYPE type2);
+
+	bool CheckVar(TypeLex a);
+
+	Node* AddId(TypeLex a, DATA_TYPE t);						//Добавление переменной с типом, возвращает ссылку на эту переменную
+	Node* FindId(TypeLex a);									//Находит переменную по названию
+
+	DATA_TYPE TypeAnalis(int a);								//Получаем тип данных
+	
+	DATA_TYPE CheckDataTypes(DATA_TYPE type1, DATA_TYPE type2);	//Проверка преобразования типов. Возвращает тип после приведения
+
 	DATA_TYPE SemGetResultType(DATA_TYPE a, DATA_TYPE b);
-	DATA_TYPE SemGetType(TypeLex a);
+	DATA_TYPE SemGetType(TypeLex a);							// найти в таблице переменную с именем a и вернуть тип
 };
+	

@@ -39,7 +39,6 @@ void Diagram::F()
 	uk = sc->GetUK();
 	t1 = sc->Scaner(l);
 	
-	
 	tree->AddId(l, TYPE_FUNCT);
 	
 	sc->SetL(line);
@@ -54,6 +53,7 @@ void Diagram::F()
 	if (t1 != Tclosebracket) sc->PrintError("Ожидалось \")\"", "");
 
 	B();
+
 }
 
 //блок
@@ -86,7 +86,6 @@ void Diagram::J()
 		uk = sc->GetUK();
 		t1 = sc->Scaner(l);
 		
-
 		if ((t1 == Tlong) || (t1 == Tshort) || (t1 == Tconst))
 		{
 			sc->SetUK(uk);
@@ -124,7 +123,6 @@ void Diagram::O()
 	TypeLex l;
 	int t, uk, line;
 	t = sc->Scaner(l);
-
 
 	if (t == Tconst)
 	{
@@ -247,14 +245,12 @@ void Diagram::L()
 
 	line = sc->GetL();
 	uk = sc->GetUK();
-
 	
 	membeforeid = sc->GetUK();
 	t = sc->Scaner(l);
 
 	if (t == Tif)
 	{
-		//sc->SetUK(uk);
 		I();
 	}
 
@@ -277,7 +273,7 @@ void Diagram::L()
 
 			if (tree->SemGetType(l) != TYPE_FUNCT)
 				sc->PrintError("Идентификатор не является идентификатором функции", "");
-			//()
+			
 			sc->SetUK(memafterbracket);
 			t = sc->Scaner(l);
 			if (t != Tclosebracket)
@@ -368,7 +364,6 @@ DATA_TYPE Diagram::P3()
 	temptype = P4();
 	line = sc->GetL();
 	uk = sc->GetUK();
-	//line = sc->GetL();
 	t = sc->Scaner(l);
 	while ((t == TnotEqual) || (t == Tmore) ||
 		(t == Tless) || (t == Tequalmore) || 
@@ -377,7 +372,6 @@ DATA_TYPE Diagram::P3()
 		temptype = tree->SemGetResultType(temptype, P4());
 		line = sc->GetL();
 		uk = sc->GetUK();
-		//line = sc->GetL();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
@@ -394,14 +388,12 @@ DATA_TYPE Diagram::P4()
 	temptype = P5();
 	line = sc->GetL();
 	uk = sc->GetUK();
-	//line = sc->GetL();
 	t = sc->Scaner(l);
 	while ((t == Tshiftl) || (t == Tshiftr))
 	{
 		temptype = tree->SemGetResultType(temptype, P5());
 		line = sc->GetL();
 		uk = sc->GetUK();
-		//line = sc->GetL();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
@@ -477,10 +469,8 @@ DATA_TYPE Diagram::P7()
 			
 		t = sc->Scaner(l);
 		if (t != Tclosebracket) sc->PrintError("Ожидалось )", "");
-		
 		return temptype;
 	}
-
 	else sc->PrintError("Ожидался идентификатор", "");
 }
 

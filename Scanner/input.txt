@@ -1,38 +1,31 @@
 long int a,b;
-void fun() {
-long int y; 
-{long int z;}
-long int z;
-//long int a,d;
-b = a + a;
+
+void fun() 
 {
-	long int a,b,x;
-}
-
-
+	long int y; 
+	{long int z;}
+	long int z;
+	
+	b = a + a;
+	{
+		long int a,b,x;
+	}
 	long int a, b, x;
-
-
-x=2;
-{long int fun = 2;}
-
+	
+	x=2;
+	
+	{long int fun = 2;}
 
 }
-
-
 
 void a() {
 
-
-void fun() ;{}
 fun ();
-
 long int x = fun;
 }
+
+
 /*
-
-
-
 void main()
 {{{
 
