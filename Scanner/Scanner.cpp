@@ -57,7 +57,7 @@ start:
 			// началс€ комментарий, надо пропустить текст до Т\nТ 
 			uk = uk + 2;
 			while (t[uk] != '\n') uk++;
-			line++;
+			//line++;
 			goto start;
 		}
 		if (t[uk + 1] == '*')

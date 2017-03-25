@@ -1,6 +1,6 @@
 #include "stdafx.h" 
 #include "defs.h" 
-//#include "Scanner.h"
+#include "Scanner.h"
 #include "Diagram.h"
 
 #include <locale.h>
@@ -16,13 +16,6 @@ int main(int argc, char * argv[]) {
 
 	if (argc <= 1) sc = new TScaner("input.txt");// файл по умолчанию 
 	else sc = new TScaner(argv[1]); // заданный файл 
-
-									
-//do {
-//		type = sc->Scaner(l);
-//		printf("%s - type %d \n", l, type);
-
-	//} while (type != Tend);
 
 
 	Diagram * dg = new Diagram(sc);

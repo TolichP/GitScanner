@@ -1,9 +1,12 @@
 #pragma once
 #include "Scanner.h"
+#include "Tree.h"
+
 class Diagram
 {
 private:
 	TScaner *sc;
+	Tree *tree;
 public:
 
 	void P();	//программа
@@ -20,14 +23,19 @@ public:
 	void Y();	//присваивание
 	void U();	//вызов функции
 	void V();	//выражение
-	void P1();	//приоритеты	
-	void P2();
-	void P3();
-	void P4();
-	void P5();
-	void P6();
-	void P7();
+	DATA_TYPE P1();	//приоритеты	
+	DATA_TYPE P2();
+	DATA_TYPE P3();
+	DATA_TYPE P4();
+	DATA_TYPE P5();
+	DATA_TYPE P6();
+	DATA_TYPE P7();
 
-	Diagram(TScaner *s) { sc = s; };
+	Diagram(TScaner *s) 
+	{ 
+		this->sc = s; 
+		this->tree = new Tree();
+		tree->SetSc(sc);
+	};
 	~Diagram() {};
 };

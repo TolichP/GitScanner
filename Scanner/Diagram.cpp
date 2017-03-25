@@ -31,9 +31,19 @@ void Diagram::P()
 void Diagram::F()
 {
 	TypeLex l;
-	int t1;
+	int t1, uk;
 
 	t1 = sc->Scaner(l);
+	
+	int line = sc->GetL();
+	uk = sc->GetUK();
+	t1 = sc->Scaner(l);
+	
+	
+	tree->AddId(l, TYPE_FUNCT);
+	
+	sc->SetL(line);
+	sc->SetUK(uk);
 
 	N();
 
@@ -52,11 +62,14 @@ void Diagram::B()
 	TypeLex l;
 	int t1;
 
+	tree->GetPosition();
 	t1 = sc->Scaner(l);
 	if (t1 != Topenblock) sc->PrintError("Ожидалось \"{\"", "");
+
 	J();
 	t1 = sc->Scaner(l);
 	if (t1 != Tcloseblock) sc->PrintError("Ожидалось \"}\"", "");
+	tree->SetPosition();
 }
 
 //операторы
@@ -107,6 +120,7 @@ void Diagram::N()
 //описание переменных
 void Diagram::O()
 {
+	DATA_TYPE type;
 	TypeLex l;
 	int t, uk, line;
 	t = sc->Scaner(l);
@@ -117,6 +131,11 @@ void Diagram::O()
 		t = sc->Scaner(l);
 		if (!((t == Tlong) || (t == Tshort)))
 			sc->PrintError("Ожидалось short или long","");
+		else
+		{
+			if (t == Tlong) type = TYPE_LONG_INTEGER;
+			if (t == Tshort) type = TYPE_SHORT_INTEGER;
+		}
 
 		t = sc->Scaner(l);
 		if (t != Tint)
@@ -137,7 +156,9 @@ void Diagram::O()
 
 	else if ((t == Tlong) || (t == Tshort))
 	{
-
+		if (t == Tlong) type = TYPE_LONG_INTEGER;
+		if (t == Tshort) type = TYPE_SHORT_INTEGER;
+	
 		t = sc->Scaner(l);
 		if (t != Tint)
 			sc->PrintError("Ожидалось int", "");
@@ -147,6 +168,8 @@ void Diagram::O()
 
 			if (t != Tid)
 				sc->PrintError("Ожидался идентификатор", "");
+			else
+				tree->AddId(l, type);			//занесём идентификатор			
 
 			line = sc->GetL();
 			uk = sc->GetUK();
@@ -176,6 +199,7 @@ void Diagram::O()
 //if
 void Diagram::I()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk, line;
 
@@ -186,7 +210,12 @@ void Diagram::I()
 	if (t != Topenbracket)
 		sc->PrintError("Ожидалось (", "");
 
-	else P1();
+	else
+	{
+		temptype = P1();
+		if (temptype == TYPE_FUNCT)
+			sc->PrintError("Аргументом if не может быть void функция", "");
+	}
 
 	if (t != Tclosebracket)
 		sc->PrintError("Ожидалось )", "");
@@ -210,11 +239,17 @@ void Diagram::I()
 //оператор
 void Diagram::L()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk, line;
 
+	int membeforeid, memafterid, memafterbracket;
+
 	line = sc->GetL();
 	uk = sc->GetUK();
+
+	
+	membeforeid = sc->GetUK();
 	t = sc->Scaner(l);
 
 	if (t == Tif)
@@ -225,16 +260,25 @@ void Diagram::L()
 
 	else if (t == Tid)
 	{
+		memafterid = sc->GetUK();
+		temptype = tree->SemGetType(l);
 		t = sc->Scaner(l);
 		if (t == Tequal)
 		{
 			sc->SetUK(uk);
 			sc->SetL(line);
-			P1();
+			tree->CheckDataTypes(temptype,P1());	//проверка на приведение типов
 		}
 		else if (t == Topenbracket)
 		{
+			memafterbracket = sc->GetUK();
+			sc->SetUK(membeforeid);
+			sc->Scaner(l);
+
+			if (tree->SemGetType(l) != TYPE_FUNCT)
+				sc->PrintError("Идентификатор не является идентификатором функции", "");
 			//()
+			sc->SetUK(memafterbracket);
 			t = sc->Scaner(l);
 			if (t != Tclosebracket)
 				sc->PrintError("Ожидалось )", "");
@@ -268,61 +312,60 @@ void Diagram::L()
 }
 
 
-void Diagram::P1()
+DATA_TYPE Diagram::P1()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk, line;
 
-	P2();
+	temptype = P2();
 	line = sc->GetL();
 	uk = sc->GetUK();
 	t = sc->Scaner(l);
 
-	if (t == Tclosebracket)
-	{
-		sc->PrintError("Пустые скобки", "");
-		return;
-	}
-
 	while (t == Tor)
 	{
-		P2();
+		temptype = tree->SemGetResultType(temptype, P2());
 		line = sc->GetL();
 		uk = sc->GetUK();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
-void Diagram::P2()
+DATA_TYPE Diagram::P2()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk, line;
 
-	P3();
+	temptype = P3();
 	line = sc->GetL();
 	uk = sc->GetUK();
 	t = sc->Scaner(l);
 
 	while (t == Tand)
 	{
-		P3();
+		temptype = tree->SemGetResultType(temptype, P3());
 		line = sc->GetL();
 		uk = sc->GetUK();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
 
-void Diagram::P3()
+DATA_TYPE Diagram::P3()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
-	P4();
+	temptype = P4();
 	line = sc->GetL();
 	uk = sc->GetUK();
 	//line = sc->GetL();
@@ -331,7 +374,7 @@ void Diagram::P3()
 		(t == Tless) || (t == Tequalmore) || 
 		(t == Tequalless) || (t == Tequal))
 	{
-		P4();
+		temptype = tree->SemGetResultType(temptype, P4());
 		line = sc->GetL();
 		uk = sc->GetUK();
 		//line = sc->GetL();
@@ -339,21 +382,23 @@ void Diagram::P3()
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
-void Diagram::P4()
+DATA_TYPE Diagram::P4()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
-	P5();
+	temptype = P5();
 	line = sc->GetL();
 	uk = sc->GetUK();
 	//line = sc->GetL();
 	t = sc->Scaner(l);
 	while ((t == Tshiftl) || (t == Tshiftr))
 	{
-		P5();
+		temptype = tree->SemGetResultType(temptype, P5());
 		line = sc->GetL();
 		uk = sc->GetUK();
 		//line = sc->GetL();
@@ -361,53 +406,54 @@ void Diagram::P4()
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
-void Diagram::P5()
+DATA_TYPE Diagram::P5()
 {
+	DATA_TYPE temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
-	P6();
+	temptype = P6();
 	line = sc->GetL();
 	uk = sc->GetUK();
-	//line = sc->GetL();
 	t = sc->Scaner(l);
 	while ((t == Tplus) || (t == Tminus))
 	{
-		P6();
+		temptype = tree->SemGetResultType(temptype, P6());
 		line = sc->GetL();
 		uk = sc->GetUK();
-		//line = sc->GetL();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
-void Diagram::P6()
+DATA_TYPE Diagram::P6()
 {
 	TypeLex l;
 	int t, uk;
 	int line;
-	P7();
+	DATA_TYPE temptype;
+	temptype = P7();
 	line = sc->GetL();
 	uk = sc->GetUK();
-	//line = sc->GetL();
 	t = sc->Scaner(l);
 	while ((t == Tmul) || (t == Tdiv) || (t == Tpercent))
 	{
-		P7();
+		temptype = tree->SemGetResultType(temptype, P7());
 		line = sc->GetL();
 		uk = sc->GetUK();
-		//line = sc->GetL();
 		t = sc->Scaner(l);
 	}
 	sc->SetUK(uk);
 	sc->SetL(line);
+	return temptype;
 }
 
-void Diagram::P7()
+DATA_TYPE Diagram::P7()
 {
 	TypeLex l;
 	int t, uk, line;
@@ -416,37 +462,26 @@ void Diagram::P7()
 	uk = sc->GetUK();
 	t = sc->Scaner(l);
 
-	if ((t == Tconst10) && (t == Tconst16)) {}
+	if ((t == Tconst10) || (t == Tconst16)) 
+	{
+		return TYPE_SHORT_INTEGER;
+	}
 
-	else if (t == Tid) {}
+	else if (t == Tid) 
+	{
+		return tree->SemGetType(l);
+	}
 	else if (t == Topenbracket)
 	{
-		P1();
-		//t = sc->Scaner(l);
+		DATA_TYPE temptype = P1();
+			
+		t = sc->Scaner(l);
 		if (t != Tclosebracket) sc->PrintError("Ожидалось )", "");
+		
+		return temptype;
 	}
 
 	else sc->PrintError("Ожидался идентификатор", "");
-
-	//Код работал правильно - выдавал сообщение об ошибке, указывал верный номер строки.
-	//Однако сообщение об ошибке было некорректным. 
-	//Закоментированный код ниже - сообщение об ошибке некорректно, но с ним счетчик строк работает правильно
-	//Код выше - сообщение корректно, но падает счетчик строк
-
-
-
-	/*
-	if ((t != Tid) && (t != Tconst10) && (t != Tconst16))
-	{
-		if (t == Topenbracket)
-		{
-			P1();
-		}
-		else sc->PrintError("Ожидалось (", "");
-
-		if (t != Tclosebracket)
-			sc->PrintError("Ожидалось )", "");
-	}*/
 }
 
 
