@@ -2,6 +2,9 @@
 #include "defs.h"
 #include "Scanner.h"
 
+#include <stack>
+#include <string>
+
 using namespace std;
 
 enum DATA_TYPE {

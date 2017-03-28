@@ -3,8 +3,6 @@
 #include "stdafx.h"
 #include "Tree.h"
 
-#include <stack>
-#include <string>
 #include <iostream>
 
 #define max(a,b) a<b ? b : a
