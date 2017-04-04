@@ -1,10 +1,5 @@
-void main()
-{
-long int a;
-a = 4;
-long int b = a;
-}
-/*
+long int a,b;
+
 void fun() 
 {
 	long int y; 
@@ -29,7 +24,7 @@ fun ();
 long int x = fun;
 }
 
-*/
+
 /*
 void main()
 {{{
