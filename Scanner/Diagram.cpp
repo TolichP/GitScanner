@@ -119,7 +119,7 @@ void Diagram::N()
 //описание переменных
 void Diagram::O()
 {
-	DATA_TYPE type;
+	Type type;
 	TypeLex l;
 	int t, uk, line;
 	t = sc->Scaner(l);
@@ -197,7 +197,7 @@ void Diagram::O()
 //if
 void Diagram::I()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk, line;
 
@@ -237,7 +237,7 @@ void Diagram::I()
 //оператор
 void Diagram::L()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk, line;
 
@@ -308,9 +308,9 @@ void Diagram::L()
 }
 
 
-DATA_TYPE Diagram::P1()
+Type Diagram::P1()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk, line;
 
@@ -331,9 +331,9 @@ DATA_TYPE Diagram::P1()
 	return temptype;
 }
 
-DATA_TYPE Diagram::P2()
+Type Diagram::P2()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk, line;
 
@@ -355,9 +355,9 @@ DATA_TYPE Diagram::P2()
 }
 
 
-DATA_TYPE Diagram::P3()
+Type Diagram::P3()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
@@ -379,9 +379,9 @@ DATA_TYPE Diagram::P3()
 	return temptype;
 }
 
-DATA_TYPE Diagram::P4()
+Type Diagram::P4()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
@@ -401,9 +401,9 @@ DATA_TYPE Diagram::P4()
 	return temptype;
 }
 
-DATA_TYPE Diagram::P5()
+Type Diagram::P5()
 {
-	DATA_TYPE temptype;
+	Type temptype;
 	TypeLex l;
 	int t, uk;
 	int line;
@@ -423,12 +423,12 @@ DATA_TYPE Diagram::P5()
 	return temptype;
 }
 
-DATA_TYPE Diagram::P6()
+Type Diagram::P6()
 {
 	TypeLex l;
 	int t, uk;
 	int line;
-	DATA_TYPE temptype;
+	Type temptype;
 	temptype = P7();
 	line = sc->GetL();
 	uk = sc->GetUK();
@@ -445,7 +445,7 @@ DATA_TYPE Diagram::P6()
 	return temptype;
 }
 
-DATA_TYPE Diagram::P7()
+Type Diagram::P7()
 {
 	TypeLex l;
 	int t, uk, line;
@@ -465,7 +465,7 @@ DATA_TYPE Diagram::P7()
 	}
 	else if (t == Topenbracket)
 	{
-		DATA_TYPE temptype = P1();
+		Type temptype = P1();
 			
 		t = sc->Scaner(l);
 		if (t != Tclosebracket) sc->PrintError("ќжидалось )", "");

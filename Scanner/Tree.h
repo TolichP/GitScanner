@@ -7,7 +7,7 @@
 
 using namespace std;
 
-enum DATA_TYPE {
+enum Type {
 	EMPTY = -1, 
 	TYPE_UNKNOWN = 1, 
 	TYPE_SHORT_INTEGER,
@@ -15,35 +15,75 @@ enum DATA_TYPE {
 	TYPE_FUNCT
 };
 
+struct DataValue
+{
+	short int DataAsShortInt;
+	long int DataAsLongInt;
+	DataValue()
+	{
+		DataAsShortInt = 0;
+		DataAsLongInt = 0;
+	}
+	DataValue(DataValue* value)
+	{
+		DataAsLongInt = value->DataAsLongInt;
+		DataAsShortInt = value->DataAsShortInt;
+	}
+};
+
+struct TData
+{
+	DataValue* value;
+	Type type;
+
+	TData()
+	{
+		value = new DataValue();
+		type = TYPE_UNKNOWN;
+	}
+};
+
 struct Node {
 	TypeLex name;
-	DATA_TYPE type;
-	DATA_TYPE ReturnType;
-
+	Type type;
+	
 	Node *parent;
 	Node *left;
 	Node *right;
-	
-	short int DataShort;
-	long int DataLong;
+	DataValue* value;
 
 	Node()
 	{
-		type = TYPE_UNKNOWN;
 		parent = NULL;
 		left = NULL;
 		right = NULL;
-		DataShort = NULL;
-		DataLong = NULL;
+		type = TYPE_UNKNOWN;
+		value = new DataValue();
 	}
-
-	Node(TypeLex l, DATA_TYPE t, Node* p)
+	Node(TypeLex l, Type t, Node* p)
 	{
 		parent = p;
 		left = NULL;
 		right = NULL;
 		strcpy(name, l);
 		type = t;
+		value = new DataValue();
+	}
+	Node(TypeLex l, Node* s, Node* p)
+	{
+		parent = p;
+		left = NULL;
+		right = NULL;
+		strcpy(name, l);
+	}
+	Node(Node* node)
+	{
+		strcpy(name, node->name);
+		type = node->type;
+		parent = NULL;
+		left = NULL;
+		right = NULL;
+		value = new DataValue(node->value);
 	}
 };
 
@@ -67,14 +107,14 @@ public:
 
 	bool CheckVar(TypeLex a);
 
-	Node* AddId(TypeLex a, DATA_TYPE t);						//ƒобавление переменной с типом, возвращает ссылку на эту переменную
+	Node* AddId(TypeLex a, Type t);						//ƒобавление переменной с типом, возвращает ссылку на эту переменную
 	Node* FindId(TypeLex a);									//Ќаходит переменную по названию
 
-	DATA_TYPE TypeAnalis(int a);								//ѕолучаем тип данных
+	Type TypeAnalis(int a);								//ѕолучаем тип данных
 	
-	DATA_TYPE CheckDataTypes(DATA_TYPE type1, DATA_TYPE type2);	//ѕроверка преобразовани€ типов. ¬озвращает тип после приведени€
+	Type CheckDataTypes(Type type1, Type type2);	//ѕроверка преобразовани€ типов. ¬озвращает тип после приведени€
 
-	DATA_TYPE SemGetResultType(DATA_TYPE a, DATA_TYPE b);
-	DATA_TYPE SemGetType(TypeLex a);							// найти в таблице переменную с именем a и вернуть тип
+	Type SemGetResultType(Type a, Type b);
+	Type SemGetType(TypeLex a);							// найти в таблице переменную с именем a и вернуть тип
 };
 	

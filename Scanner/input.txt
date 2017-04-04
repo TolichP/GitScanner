@@ -1,9 +1,10 @@
 long int a,b;
-
+long int y; 
 void fun() 
 {
-	long int y; 
-	{long int z;}
+	
+	//long int y; 
+	{long int y;}
 	long int z;
 	
 	b = a + a;
@@ -19,7 +20,7 @@ void fun()
 }
 
 void a() {
-
+long int y; 
 fun ();
 long int x = fun;
 }

@@ -23,13 +23,13 @@ public:
 	void Y();	//присваивание
 	void U();	//вызов функции
 	void V();	//выражение
-	DATA_TYPE P1();	//приоритеты	
-	DATA_TYPE P2();
-	DATA_TYPE P3();
-	DATA_TYPE P4();
-	DATA_TYPE P5();
-	DATA_TYPE P6();
-	DATA_TYPE P7();
+	Type P1();	//приоритеты	
+	Type P2();
+	Type P3();
+	Type P4();
+	Type P5();
+	Type P6();
+	Type P7();
 
 	Diagram(TScaner *s) 
 	{ 
