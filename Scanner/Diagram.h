@@ -5,6 +5,7 @@
 class Diagram
 {
 private:
+	int FlInt;
 	TScaner *sc;
 	Tree *tree;
 public:
@@ -23,19 +24,20 @@ public:
 	void Y();	//присваивание
 	void U();	//вызов функции
 	void V();	//выражение
-	Type P1();	//приоритеты	
-	Type P2();
-	Type P3();
-	Type P4();
-	Type P5();
-	Type P6();
-	Type P7();
+	TData* P1();	//приоритеты	
+	TData* P2();
+	TData* P3();
+	TData* P4();
+	TData* P5();
+	TData* P6();
+	TData* P7();
 
 	Diagram(TScaner *s) 
 	{ 
 		this->sc = s; 
 		this->tree = new Tree();
 		tree->SetSc(sc);
+		FlInt = true;
 	};
 	~Diagram() {};
 };

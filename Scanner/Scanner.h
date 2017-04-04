@@ -1,5 +1,5 @@
-#ifndef __SCANER 
-#define __SCANER 
+#ifndef __Scaner 
+#define __Scaner 
 #include "defs.h"
 
 class TScaner {

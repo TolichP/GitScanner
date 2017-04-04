@@ -47,6 +47,7 @@ struct Node {
 	TypeLex name;
 	Type type;
 	
+	bool FlagConst;
 	Node *parent;
 	Node *left;
 	Node *right;
@@ -54,6 +55,7 @@ struct Node {
 
 	Node()
 	{
+		FlagConst = false;
 		parent = NULL;
 		left = NULL;
 		right = NULL;
@@ -62,6 +64,7 @@ struct Node {
 	}
 	Node(TypeLex l, Type t, Node* p)
 	{
+		FlagConst = false;
 		parent = p;
 		left = NULL;
 		right = NULL;
@@ -71,6 +74,7 @@ struct Node {
 	}
 	Node(TypeLex l, Node* s, Node* p)
 	{
+		FlagConst = false;
 		parent = p;
 		left = NULL;
 		right = NULL;
@@ -78,6 +82,7 @@ struct Node {
 	}
 	Node(Node* node)
 	{
+		FlagConst = false;
 		strcpy(name, node->name);
 		type = node->type;
 		parent = NULL;
@@ -104,10 +109,11 @@ public:
 	void ShowTree();
 	void PaintError(TypeLex a, string str);
 	void SetSc(TScaner *a) { sc = a; };
+	void SetValue(DataValue* value, Node* node);
 
 	bool CheckVar(TypeLex a);
 
-	Node* AddId(TypeLex a, Type t);						//ƒобавление переменной с типом, возвращает ссылку на эту переменную
+	Node* AddId(TypeLex a, Type t, bool f);						//ƒобавление переменной с типом, возвращает ссылку на эту переменную
 	Node* FindId(TypeLex a);									//Ќаходит переменную по названию
 
 	Type TypeAnalis(int a);								//ѕолучаем тип данных

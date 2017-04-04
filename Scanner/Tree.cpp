@@ -29,14 +29,16 @@ bool Tree::CheckVar(TypeLex a)
 	return strcmp(a, node->name) != 0;
 }
 
-Node* Tree::AddId(TypeLex a, Type t)
+Node* Tree::AddId(TypeLex a, Type t, bool f)
 {
 	if (CheckVar(a))
 	{
 		Node* node = new Node(a, t, cur);
 		cur->left = node;
 		cur = node;
+		cur->FlagConst = f;
 		return node;
+		
 	}
 	else
 	{
@@ -137,7 +139,7 @@ Type Tree::SemGetType(TypeLex a) {
 Type Tree::CheckDataTypes(Type type1, Type type2) {
 	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_SHORT_INTEGER;
-	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
+	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_LONG_INTEGER;
 	sc->PrintError("Приведение типов невозможно ", "");
 	return TYPE_UNKNOWN;
 }
@@ -147,6 +149,12 @@ Type Tree::SemGetResultType(Type type1, Type type2)
 	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_SHORT_INTEGER;
 	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_LONG_INTEGER;
-	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
+	sc->PrintError("Приведение типов невозможно ", "");
+	//if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	return TYPE_UNKNOWN;
+}
+
+void Tree::SetValue(DataValue* _value, Node* node)
+{
+	node->value = _value;
 }
