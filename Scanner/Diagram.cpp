@@ -266,6 +266,7 @@ void Diagram::I()
 	Type temptype;
 	TypeLex l;
 	int t, uk, line;
+	int LocalFlInt = FlInt;
 
 	line = sc->GetL();
 	uk = sc->GetUK();
@@ -276,11 +277,19 @@ void Diagram::I()
 
 	else
 	{
-		//temptype = P1();
-		if (temptype == TYPE_FUNCT)
+		TData * data = P1();
+		if (LocalFlInt)
+		{
+			if (data->type == TYPE_SHORT_INTEGER)
+				FlInt = data->value->DataAsShortInt;
+			if (data->type == TYPE_LONG_INTEGER)
+				FlInt = data->value->DataAsLongInt;
+		}
+		if (data->type == TYPE_FUNCT)
 			sc->PrintError("Аргументом if не может быть void функция", "");
 	}
 
+	t = sc->Scaner(l);
 	if (t != Tclosebracket)
 		sc->PrintError("Ожидалось )", "");
 
@@ -289,6 +298,7 @@ void Diagram::I()
 	line = sc->GetL();
 	uk = sc->GetUK();
 	t = sc->Scaner(l);
+	if (LocalFlInt) FlInt = !FlInt;
 	if (t == Telse)
 	{
 		L();
@@ -298,14 +308,24 @@ void Diagram::I()
 		sc->SetUK(uk);
 		sc->SetL(line);
 	}
+	FlInt = LocalFlInt;
 }
 
 //оператор
 void Diagram::L()
 {
+
+	//TODO::
+	//return
+	//a();
+	//проверить a = p1;
+
 	Type temptype;
 	TypeLex l;
 	int t, uk, line;
+	Node *node = new Node();
+	TData * data = new TData();
+	TData * data1 = new TData();
 
 	int membeforeid, memafterid, memafterbracket;
 
@@ -322,6 +342,8 @@ void Diagram::L()
 
 	else if (t == Tid)
 	{
+		node = tree->FindId(l);
+		data->type = node->type;
 		memafterid = sc->GetUK();
 		temptype = tree->SemGetType(l);
 		t = sc->Scaner(l);
@@ -329,6 +351,40 @@ void Diagram::L()
 		{
 			sc->SetUK(uk);
 			sc->SetL(line);
+			data1 = P1();
+			if (FlInt)
+			{
+				switch (data->type)
+				{
+				case TYPE_LONG_INTEGER:
+					switch (data1->type)
+					{
+					case TYPE_LONG_INTEGER: data->value->DataAsLongInt = data->value->DataAsLongInt; break;
+					case TYPE_SHORT_INTEGER: data->value->DataAsLongInt = data->value->DataAsShortInt; break;
+					default:
+						sc->PrintError("Невозможно присвоить", "");
+						break;
+					}
+					break;
+				case TYPE_SHORT_INTEGER:
+					switch (data1->type)
+					{
+					case TYPE_LONG_INTEGER: data->value->DataAsShortInt = data->value->DataAsLongInt; break;
+					case TYPE_SHORT_INTEGER: data->value->DataAsShortInt = data->value->DataAsShortInt; break;
+					default:
+						sc->PrintError("Невозможно присвоить", "");
+						break;
+					}
+					break;
+				default:
+					sc->PrintError("Невозможно присвоить", "");
+					break;
+				}
+				cout << "Присвоение: " << node->name << " = ";
+				if (data->type == TYPE_LONG_INTEGER) cout << data->value->DataAsLongInt << endl;
+				if (data->type == TYPE_SHORT_INTEGER) cout << data->value->DataAsShortInt << endl;
+				tree->SetValue(data->value, node);
+			}
 			//tree->CheckDataTypes(temptype, P1());	//проверка на приведение типов
 		}
 		else if (t == Topenbracket)

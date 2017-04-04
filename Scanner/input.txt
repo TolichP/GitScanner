@@ -1,4 +1,8 @@
-const long int g = 10;
+long int g = 10;
+if (g == 10) g = 20;
+else g = 30;
+//check if
+/*
 long int a,b;
 long int y; 
 void fun() 
@@ -26,7 +30,7 @@ fun ();
 long int x = fun;
 }
 
-
+*/
 /*
 void main()
 {{{
