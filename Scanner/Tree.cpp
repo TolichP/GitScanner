@@ -29,7 +29,12 @@ bool Tree::CheckVar(TypeLex a)
 	return strcmp(a, node->name) != 0;
 }
 
-Node* Tree::AddId(TypeLex a, DATA_TYPE t)
+void Tree::SetValue(DataValue* _value, Node* node)
+{
+	node->value = _value;
+}
+
+Node* Tree::AddId(TypeLex a, Type t)
 {
 	if (CheckVar(a))
 	{
@@ -55,7 +60,7 @@ void Tree::PaintError(TypeLex a, string str)
 	exit(0);
 }
 
-DATA_TYPE Tree::TypeAnalis(int a)
+Type Tree::TypeAnalis(int a)
 {
 	if (a == Tlong) return TYPE_LONG_INTEGER;
 	if (a == Tshort) return TYPE_SHORT_INTEGER;
@@ -123,7 +128,7 @@ void Tree::ShowTree()
 
 TScaner* Tree::sc = (TScaner*)NULL;
 
-DATA_TYPE Tree::SemGetType(TypeLex a) {
+Type Tree::SemGetType(TypeLex a) {
 	Node * v = FindId(a);
 	if (v == NULL)
 	{
@@ -134,7 +139,7 @@ DATA_TYPE Tree::SemGetType(TypeLex a) {
 }
 
 
-DATA_TYPE Tree::CheckDataTypes(DATA_TYPE type1, DATA_TYPE type2) {
+Type Tree::CheckDataTypes(Type type1, Type type2) {
 	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_SHORT_INTEGER;
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
@@ -142,7 +147,7 @@ DATA_TYPE Tree::CheckDataTypes(DATA_TYPE type1, DATA_TYPE type2) {
 	return TYPE_UNKNOWN;
 }
 
-DATA_TYPE Tree::SemGetResultType(DATA_TYPE type1, DATA_TYPE type2)
+Type Tree::SemGetResultType(Type type1, Type type2)
 {
 	if (type1 == TYPE_LONG_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_SHORT_INTEGER) return TYPE_SHORT_INTEGER;
@@ -150,3 +155,11 @@ DATA_TYPE Tree::SemGetResultType(DATA_TYPE type1, DATA_TYPE type2)
 	if (type1 == TYPE_SHORT_INTEGER && type2 == TYPE_LONG_INTEGER) return TYPE_LONG_INTEGER;
 	return TYPE_UNKNOWN;
 }
+
+//Type Tree::ConstType(int a)
+//{
+//	if (a == Tconst10) return TYPE_SHORT_INTEGER;
+//	if (a == tlon) return TypeDouble;
+//	PaintError("", "Неизвестный тип константы");
+//	return TypeUnknown;
+//}

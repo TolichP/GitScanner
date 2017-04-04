@@ -7,6 +7,7 @@ class Diagram
 private:
 	TScaner *sc;
 	Tree *tree;
+	int FlInt;
 public:
 
 	void P();	//программа
@@ -23,19 +24,20 @@ public:
 	void Y();	//присваивание
 	void U();	//вызов функции
 	void V();	//выражение
-	DATA_TYPE P1();	//приоритеты	
-	DATA_TYPE P2();
-	DATA_TYPE P3();
-	DATA_TYPE P4();
-	DATA_TYPE P5();
-	DATA_TYPE P6();
-	DATA_TYPE P7();
+	TData * P1();	//приоритеты	
+	TData * P2();
+	TData * P3();
+	TData * P4();
+	TData * P5();
+	TData * P6();
+	TData * P7();
 
 	Diagram(TScaner *s) 
 	{ 
 		this->sc = s; 
 		this->tree = new Tree();
 		tree->SetSc(sc);
+		FlInt = true;
 	};
 	~Diagram() {};
 };
