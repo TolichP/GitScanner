@@ -1,6 +1,10 @@
-long int g = 10;
-if (g == 10) g = 20;
-else g = 30;
+void b ()
+{
+	long int g = 10;
+	if (g == 0) g = 20;
+	else g = 30;
+}
+
 //check if
 /*
 long int a,b;

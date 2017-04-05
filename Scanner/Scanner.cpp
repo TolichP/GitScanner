@@ -10,7 +10,7 @@ TScaner::TScaner(char * FileName)
 	line = 1;
 }
 
-TypeLex Keyword[MAX_KEYW] = { "long", "short", "int", "if", "main", "const", "void" };
+TypeLex Keyword[MAX_KEYW] = { "long", "short", "int", "if", "main", "const", "void", "return", "else"};
 int IndexKeyword[MAX_KEYW] = { Tlong, Tshort, Tint, Tif, Tmain, Tconst, Tvoid, Treturn, Telse};
 
 

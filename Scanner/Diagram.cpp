@@ -349,8 +349,8 @@ void Diagram::L()
 		t = sc->Scaner(l);
 		if (t == Tequal)
 		{
-			sc->SetUK(uk);
-			sc->SetL(line);
+			//sc->SetUK(uk);
+//			sc->SetL(line);
 			data1 = P1();
 			if (FlInt)
 			{
@@ -359,8 +359,8 @@ void Diagram::L()
 				case TYPE_LONG_INTEGER:
 					switch (data1->type)
 					{
-					case TYPE_LONG_INTEGER: data->value->DataAsLongInt = data->value->DataAsLongInt; break;
-					case TYPE_SHORT_INTEGER: data->value->DataAsLongInt = data->value->DataAsShortInt; break;
+					case TYPE_LONG_INTEGER: data->value->DataAsLongInt = data1->value->DataAsLongInt; break;
+					case TYPE_SHORT_INTEGER: data->value->DataAsLongInt = data1->value->DataAsShortInt; break;
 					default:
 						sc->PrintError("Невозможно присвоить", "");
 						break;
@@ -369,8 +369,8 @@ void Diagram::L()
 				case TYPE_SHORT_INTEGER:
 					switch (data1->type)
 					{
-					case TYPE_LONG_INTEGER: data->value->DataAsShortInt = data->value->DataAsLongInt; break;
-					case TYPE_SHORT_INTEGER: data->value->DataAsShortInt = data->value->DataAsShortInt; break;
+					case TYPE_LONG_INTEGER: data->value->DataAsShortInt = data1->value->DataAsLongInt; break;
+					case TYPE_SHORT_INTEGER: data->value->DataAsShortInt = data1->value->DataAsShortInt; break;
 					default:
 						sc->PrintError("Невозможно присвоить", "");
 						break;
