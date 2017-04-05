@@ -38,6 +38,8 @@ void Diagram::F()
 {
 	TypeLex l;
 	int t1, uk;
+	int FlInt_local = -1;
+	Node *newfun = NULL;
 
 	t1 = sc->Scaner(l);
 
@@ -45,12 +47,20 @@ void Diagram::F()
 	uk = sc->GetUK();
 	t1 = sc->Scaner(l);
 
-	tree->AddId(l, TYPE_FUNCT, false);
+	newfun = tree->AddId(l, TYPE_FUNCT, false);
 
-	sc->SetL(line);
+ 	sc->SetL(line);
 	sc->SetUK(uk);
 
 	N();
+
+	if (t1 != Tmain)
+	{
+		//если не главная ПП, запомнили флаг 
+		FlInt_local = FlInt;
+		FlInt = 0;
+	}
+
 
 	t1 = sc->Scaner(l);
 	if (t1 != Topenbracket) sc->PrintError("Ожидалось \"(\"", "");
@@ -58,8 +68,16 @@ void Diagram::F()
 	t1 = sc->Scaner(l);
 	if (t1 != Tclosebracket) sc->PrintError("Ожидалось \")\"", "");
 
+	//сохранили uk
+	newfun->value->DataAsLongInt = sc->GetUK();
+
 	B();
 
+	if (FlInt_local != -1)
+	{
+		//если флаг был инициализирован, значит не главная ПП, восстановили флаг
+		FlInt = FlInt_local;
+	}
 }
 
 //блок
@@ -72,9 +90,14 @@ void Diagram::B()
 	t1 = sc->Scaner(l);
 	if (t1 != Topenblock) sc->PrintError("Ожидалось \"{\"", "");
 
+	oldFlintForReturn = FlInt;
+
 	J();
 	t1 = sc->Scaner(l);
 	if (t1 != Tcloseblock) sc->PrintError("Ожидалось \"}\"", "");
+
+	FlInt = oldFlintForReturn;
+
 	tree->SetPosition();
 }
 
@@ -318,7 +341,6 @@ void Diagram::L()
 	//TODO::
 	//return
 	//a();
-	//проверить a = p1;
 
 	Type temptype;
 	TypeLex l;
@@ -400,6 +422,14 @@ void Diagram::L()
 			t = sc->Scaner(l);
 			if (t != Tclosebracket)
 				sc->PrintError("Ожидалось )", "");
+
+			int saveUK = sc->GetUK();				//сохранить uk
+			sc->SetUK(node->value->DataAsLongInt);	//uk на начало описанной функции
+
+			B();
+
+			sc->SetUK(saveUK);
+
 		}
 
 		else (sc->PrintError("Ошибка", ""));
@@ -421,6 +451,7 @@ void Diagram::L()
 		t = sc->Scaner(l);
 		if (t != Tsemicolon)
 			sc->PrintError("Ожидалось ;", "");
+		FlInt = 0;
 	}
 
 	else if (t != Tsemicolon)

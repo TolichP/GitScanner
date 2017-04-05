@@ -3,6 +3,14 @@ void b ()
 	long int g = 10;
 	if (g == 0) g = 20;
 	else g = 30;
+	return;
+	g = 25;
+}
+
+void main()
+{
+	b();
+	short int h = 15;
 }
 
 //check if

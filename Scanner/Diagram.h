@@ -6,6 +6,8 @@ class Diagram
 {
 private:
 	int FlInt;
+	int FlintForReturn;
+	int oldFlintForReturn;
 	TScaner *sc;
 	Tree *tree;
 public:
@@ -38,6 +40,8 @@ public:
 		this->tree = new Tree();
 		tree->SetSc(sc);
 		FlInt = true;
+		FlintForReturn = true;
+		oldFlintForReturn = true;
 	};
 	~Diagram() {};
 };
